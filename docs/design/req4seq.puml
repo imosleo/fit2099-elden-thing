@@ -1,0 +1,28 @@
+@startuml
+note left of ConsumeAction
+This sequence diagram is specific
+to the scenario where the player
+chooses to consume a Scarab
+end note
+participant ":ConsumeAction" as ConsumeAction
+participant "consumable:Scarab" as Scarab
+participant "actor:Player" as Player
+participant "item:StatChanger" as StatChanger
+
+-> ConsumeAction: execute(actor, map)
+activate ConsumeAction
+ConsumeAction -> Scarab: consume(actor, map)
+activate Scarab
+Scarab -> Player: modifyAttributeMaximum(BaseActorAttributes.HEALTH, ActorAttributeOperations.INCREASE, hitPoints)
+activate Player
+Scarab -> Player: modifyAttributeMaximum(BaseActorAttributes.MANA, ActorAttributeOperations.INCREASE, mana)
+Scarab -> StatChanger: new StatChanger(hitPoints, mana, charges)
+activate StatChanger
+Scarab <- StatChanger: item
+deactivate StatChanger
+Scarab -> Player: addItemToInventory(item)
+deactivate Player
+ConsumeAction <-- Scarab: Description of consumption: String
+deactivate Scarab
+deactivate ConsumeAction
+@enduml
